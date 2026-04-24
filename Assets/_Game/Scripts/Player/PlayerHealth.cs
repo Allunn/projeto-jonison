@@ -26,6 +26,7 @@ public class PlayerHealth : MonoBehaviour
 
     private void Update()
     {
+        // da dano no player pra teste
         if(Input.GetKeyDown(KeyCode.Y))
         {
             TakeDamage(1);
@@ -47,21 +48,23 @@ public class PlayerHealth : MonoBehaviour
 
     private void UpdateBar()
     {
+        // calcula um valor de 0 a 1 baseado na vida atual e vida máxima
         healthBar.value = (float)currentHealth / (float)maxHealth;
     }
 
     private void Die()
     {
         isDead = true;
-        //playerSprite.enabled = false;
         move.enabled = false;
         cannon.gameObject.SetActive(false);
 
+        // reseta o game depois de um tempo
         Invoke(nameof(ResetGame), 2f);
     }
 
     private void ResetGame()
     {
+        // carraga a cena que está ativa atualmente
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 }

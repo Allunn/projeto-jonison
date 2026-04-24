@@ -21,6 +21,7 @@ public class EnemyAttack : MonoBehaviour
 
     void Update()
     {
+        // ignora caso o inimigo esteja morto
         if (health.isDead) return;
 
         DetectPlayer();
@@ -29,6 +30,7 @@ public class EnemyAttack : MonoBehaviour
         {
             attackTime = attackTimeMax;
 
+            // calculo da rotação do tiro (peguei da internet btw :p)
             Vector2 direction = (playerPos.position - transform.position).normalized;
             float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
             var bulletGO = Instantiate(bullet, transform.position, Quaternion.Euler(new Vector3(0f, 0f, angle)), null);
@@ -40,6 +42,7 @@ public class EnemyAttack : MonoBehaviour
 
     private void DetectPlayer()
     {
+        // usa o overlap circle em volta do inimigo para detectar o player
         Collider2D hit = Physics2D.OverlapCircle(transform.position, detectionRange, playerLayer);
 
         if (hit != null)

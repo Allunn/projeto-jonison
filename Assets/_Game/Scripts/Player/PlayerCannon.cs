@@ -25,7 +25,8 @@ public class PlayerCannon : MonoBehaviour
     void Update()
     {
         UpdateRotation();
-     
+        
+        // tiro com cooldown
         if (Input.GetKeyDown(KeyCode.Mouse0) && shootTimer <= 0f)
         {
             FireCannon();
@@ -33,11 +34,13 @@ public class PlayerCannon : MonoBehaviour
 
         shootTimer -= Time.deltaTime;
 
+        // adiciona bala caso esteja jo chão
         if (movement.isGrounded) currentBullets = 1;
     }
 
     void FireCannon()
     {
+        // retorna caso esteja sem balas
         if (currentBullets <= 0) return;
 
         shootTimer = shootTimerMax;
@@ -45,6 +48,7 @@ public class PlayerCannon : MonoBehaviour
         Vector2 fireDirection = transform.up;
         movement.ApplyCannonRecoil(fireDirection, recoilForce);
 
+        // atira a bala e adiciona velocidade pra cima, por que a bala do player é rotacionada
         var bulletGO = Instantiate(bullet, shootPoint.position, transform.rotation, null);
         bulletGO.GetComponent<Rigidbody2D>().linearVelocity = -bulletGO.transform.up * 10f;
         currentBullets--;
@@ -52,6 +56,7 @@ public class PlayerCannon : MonoBehaviour
 
     void UpdateRotation()
     {
+        // Rotação do canhão (também peguei da internet, nn sei matemática)
         Vector3 mousePos = Input.mousePosition;
         mousePos.z = 0f;
 

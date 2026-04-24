@@ -24,6 +24,7 @@ public class PlayerAnimations : MonoBehaviour
 
     void Update()
     {
+        // seleciona uma das animações do player
         if (health.isDead)
         {
             animator.Play(death.name);

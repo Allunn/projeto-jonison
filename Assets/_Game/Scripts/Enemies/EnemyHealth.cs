@@ -22,6 +22,7 @@ public class EnemyHealth : MonoBehaviour
         isDead = true;
         col.enabled = false;
 
+        // destroi o objeto do inimigo depois que a animação acabou
         Invoke(nameof(DestroyEnemy), deathAnim.length);
     }
 

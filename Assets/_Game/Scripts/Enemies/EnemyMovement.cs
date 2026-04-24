@@ -58,6 +58,8 @@ public class EnemyMovement : MonoBehaviour
         transform.Rotate(0f, 180f, 0f);
     }
 
+    // raycasts para procurar por chão e buracos
+    // caso encontrar um obstáculo vira pro outro lado
     private void DetectHole()
     {
         if (Physics2D.Raycast(checkOrigin.position, -transform.up, checkDistance, groundLayer))

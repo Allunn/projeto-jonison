@@ -21,6 +21,7 @@ public class EnemyAnimations : MonoBehaviour
 
     void Update()
     {
+        // seleciona uma animação (não usei os set bools pq o emanuel me ensinou esse de só dar play)
         if (health.isDead)
         {
             if (death != null) animator.Play(death.name);

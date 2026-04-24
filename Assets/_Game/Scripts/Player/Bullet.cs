@@ -8,6 +8,7 @@ public class Bullet : MonoBehaviour
 
         if (collision.gameObject.CompareTag("Enemy"))
         {
+            // usa o try get component para acessar o script do inimigo e dar dano
             if(collision.gameObject.TryGetComponent<EnemyHealth>(out EnemyHealth enemy))
             {
                 enemy.TakeDamage();
