@@ -2,15 +2,17 @@ using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
 {
-    private Rigidbody2D rb;
-    [SerializeField] private float speed = 15f;
-    [SerializeField] private float jumpForce = 2f;
+    public Rigidbody2D rb { get; private set; }
+    private float speed = 15f;
+    private float jumpForce = 15f;
 
     [Header("Ground checker")]
     [SerializeField] private Transform checkerOrigin;
     [SerializeField] private LayerMask groundMask;
     [SerializeField] private float checkerRadius = 0.5f;
-    private bool isGrounded = false;
+    public bool isGrounded { get; private set; } = false;
+
+    private int airJumps = 1;
 
     private float movementTimerMax = 0.3f;
     private float movementTimer = 0f;
@@ -25,6 +27,8 @@ public class PlayerMovement : MonoBehaviour
 
     void FixedUpdate()
     {
+        // movement timer é usado pra não deixar o player andar enquanto "sofre"
+        // com o recoil do canhão
         if (movementTimer < 0f)
         {
             float direction = Input.GetAxisRaw("Horizontal");
@@ -39,7 +43,7 @@ public class PlayerMovement : MonoBehaviour
         movementTimer -= Time.deltaTime;
         CheckGround();
 
-        if (Input.GetKeyDown(KeyCode.Space) && isGrounded)
+        if (Input.GetKeyDown(KeyCode.Space))
         {
             Jump();
         }
@@ -49,15 +53,31 @@ public class PlayerMovement : MonoBehaviour
 
     private void Jump()
     {
-        rb.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
+        // pulo no chao
+        if (isGrounded)
+        {
+            rb.linearVelocityY = 0f;
+            rb.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
+        }
+        
+        // pulo no ar
+        if(!isGrounded && airJumps > 0)
+        {
+            airJumps --;
+            rb.linearVelocityY = 0f;
+            rb.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
+        }
 
     }
 
     private void CheckGround()
     {
+        // usa o overlap circle pra checar onde tem chão
         if (Physics2D.OverlapCircle(checkerOrigin.position, checkerRadius, groundMask))
         {
             isGrounded = true;
+            // reseta os pulos duplos se estiver no chão
+            airJumps = 1;
         }
         else
         {
@@ -67,6 +87,8 @@ public class PlayerMovement : MonoBehaviour
 
     public void ApplyCannonRecoil(Vector2 direction, float recoil)
     {
+        // reseta o timer de movimento e aplica a força que foi calculada
+        // no script do canhão (não sei explicar o calculo)
         movementTimer = movementTimerMax;
         rb.linearVelocity = Vector2.zero;
         rb.AddForce(direction * recoil, ForceMode2D.Impulse);
@@ -74,6 +96,7 @@ public class PlayerMovement : MonoBehaviour
 
     private void UpdateParallax(float speed)
     {
-        parallax.Speed = speed * 0.25f;
+        // atualiza a velocidade do script de parallax
+        parallax.Speed = (speed * -1f) * 0.25f;
     }
 }

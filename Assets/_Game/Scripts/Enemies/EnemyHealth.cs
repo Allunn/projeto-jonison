@@ -1,14 +1,33 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class EnemyHealth : MonoBehaviour
 {
-    void Start()
+    private Collider2D col;
+    public bool isDead { get; private set; } = false;
+    public AnimationClip deathAnim;
+
+    private void Start()
     {
-        
+        col = GetComponent<Collider2D>();
     }
 
-    void Update()
+    public void TakeDamage()
     {
-        
+        Die();
+    }
+
+    private void Die()
+    {
+        isDead = true;
+        col.enabled = false;
+
+        // destroi o objeto do inimigo depois que a animação acabou
+        Invoke(nameof(DestroyEnemy), deathAnim.length);
+    }
+
+    private void DestroyEnemy()
+    {
+        Destroy(gameObject);
     }
 }
